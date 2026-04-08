@@ -1,0 +1,79 @@
+{
+  "eval_set_id": "ticket_creation_test",
+  "name": "Ticket Creation Flow",
+  "description": "Test that agent searches KB first, then creates a high-priority ticket for urgent account lock",
+  "eval_cases": [
+    {
+      "eval_id": "urgent_account_lock_test",
+      "conversation": [
+        {
+          "invocation_id": "invocation_1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "My account is completely locked and I can't access anything! Please help urgently."
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "I've created a high priority ticket for your account lock issue. Our team will respond within 24 hours."
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": "call_1",
+                "name": "search_knowledge_base",
+                "args": {
+                  "query": "account lock"
+                }
+              },
+              {
+                "id": "call_2",
+                "name": "create_ticket",
+                "args": {
+                  "issue": "My account is completely locked and I can't access anything!",
+                  "priority": "high",
+                  "customer_email": "user@example.com"
+                }
+              }
+            ],
+            "tool_responses": [
+              {
+                "id": "call_1",
+                "name": "search_knowledge_base",
+                "response": {
+                  "status": "success",
+                  "report": "No articles found matching \"account lock\"",
+                  "results": []
+                }
+              },
+              {
+                "id": "call_2",
+                "name": "create_ticket",
+                "response": {
+                  "status": "success",
+                  "report": "Ticket TICK-1234 created successfully with high priority",
+                  "ticket": {
+                    "ticket_id": "TICK-1234",
+                    "issue": "My account is completely locked and I can't access anything!",
+                    "priority": "high",
+                    "customer_email": "user@example.com",
+                    "status": "open",
+                    "estimated_response": "24 hours"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "creation_timestamp": 1759974000.0
+}

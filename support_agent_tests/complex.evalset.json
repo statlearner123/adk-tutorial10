@@ -1,0 +1,109 @@
+{
+  "eval_set_id": "multi_turn_conversation_test",
+  "name": "Multi-Turn Conversation Test",
+  "description": "Test a two-turn conversation: KB search first, then ticket when KB doesn't resolve the issue",
+  "eval_cases": [
+    {
+      "eval_id": "password_reset_followup_test",
+      "conversation": [
+        {
+          "invocation_id": "invocation_1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "I forgot my password and need to reset it"
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "To reset your password, go to Settings > Security > Reset Password."
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": "call_1",
+                "name": "search_knowledge_base",
+                "args": {
+                  "query": "password reset"
+                }
+              }
+            ],
+            "tool_responses": [
+              {
+                "id": "call_1",
+                "name": "search_knowledge_base",
+                "response": {
+                  "status": "success",
+                  "report": "Found 1 article(s) matching \"password reset\"",
+                  "results": [
+                    {
+                      "topic": "password reset",
+                      "content": "To reset your password, go to Settings > Security > Reset Password."
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "invocation_id": "invocation_2",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "That didn't work. Can you create a ticket for me?"
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "I've created a ticket for your password reset issue. Our support team will help you within 48 hours."
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": "call_2",
+                "name": "create_ticket",
+                "args": {
+                  "issue": "Password reset not working after trying KB instructions",
+                  "priority": "medium",
+                  "customer_email": "user@example.com"
+                }
+              }
+            ],
+            "tool_responses": [
+              {
+                "id": "call_2",
+                "name": "create_ticket",
+                "response": {
+                  "status": "success",
+                  "report": "Ticket TICK-5678 created successfully with medium priority",
+                  "ticket": {
+                    "ticket_id": "TICK-5678",
+                    "issue": "Password reset not working after trying KB instructions",
+                    "priority": "medium",
+                    "customer_email": "user@example.com",
+                    "status": "open",
+                    "estimated_response": "48 hours"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "creation_timestamp": 1759974000.0
+}
