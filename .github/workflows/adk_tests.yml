@@ -12,9 +12,6 @@
 
 name: ADK Agent Tests
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # use Node 24 runner (avoids deprecation warning)
-
 on:
   push:
     branches: [main, master, develop]
